@@ -14,15 +14,15 @@
 <script>
 export default {
     props: {
-        index: Number
+        index: Number,
+        name: String,
+        amount: Number,
+        unit: String,
+        caloriesPerAmount: Number,
+        totalCalories: Number,
     },
     data() {
         return {
-            name: "",
-            amount: 0,
-            unit: "",
-            caloriesPerAmount: 0,
-            totalCalories: 0,
         };
     },
     methods: {
@@ -32,7 +32,7 @@ export default {
             } else {
                 this.totalCalories = 0;
             }
-            this.$emit('change', { id: this.index, calories: this.totalCalories });
+            this.$emit('change');
         }
     }
 };
