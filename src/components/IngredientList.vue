@@ -12,6 +12,7 @@
       </div>
       <cv-structured-list>
         <template slot="headings">
+          <cv-structured-list-heading></cv-structured-list-heading>
           <cv-structured-list-heading>Ingrediens</cv-structured-list-heading>
           <cv-structured-list-heading>Mengde</cv-structured-list-heading>
           <cv-structured-list-heading>Måleenhet</cv-structured-list-heading>
@@ -23,6 +24,7 @@
             v-for="item in items"
             v-bind:key="item.id"
             v-bind:ingredientIn="item"
+            v-on:remove-row="removeRow"
             v-on:change="update"
           />
 
@@ -30,9 +32,11 @@
           <cv-structured-list-data></cv-structured-list-data>
           <cv-structured-list-data></cv-structured-list-data>
           <cv-structured-list-data></cv-structured-list-data>
+          <cv-structured-list-data></cv-structured-list-data>
           <template v-if="numberOfMeals > 1">
             <cv-structured-list-data>
-              {{ formatSum(sumCaloriesPerMeal)}} (<strong>{{ formatSum(sumCalories)}}</strong>)
+              {{ formatSum(sumCaloriesPerMeal)}} (
+              <strong>{{ formatSum(sumCalories)}}</strong>)
             </cv-structured-list-data>
           </template>
           <template v-else>
@@ -89,6 +93,12 @@ export default {
         .reduce((sum, next) => sum + next, 0);
 
       this.sumCaloriesPerMeal = this.sumCalories / this.numberOfMeals;
+    },
+
+    removeRow(index) {
+      let itemIndex = this.items.findIndex(element => element.index == index);
+      this.items.splice(itemIndex, 1);
+      this.calculateSum();
     },
 
     addRow() {

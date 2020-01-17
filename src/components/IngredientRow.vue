@@ -1,5 +1,8 @@
 <template>
   <cv-structured-list-item>
+      <cv-structured-list-data>
+      <cv-button v-on:click="$emit('remove-row', ingredient.index)" type="button" kind="danger">Fjern</cv-button>
+    </cv-structured-list-data>
     <cv-structured-list-data>
       <cv-text-input v-model="ingredient.name" placeholder="Ingrediens" />
     </cv-structured-list-data>
