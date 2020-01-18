@@ -12,36 +12,32 @@
       </div>
       <cv-structured-list>
         <template slot="headings">
-          <cv-structured-list-heading></cv-structured-list-heading>
           <cv-structured-list-heading>Ingrediens</cv-structured-list-heading>
           <cv-structured-list-heading>Mengde</cv-structured-list-heading>
           <cv-structured-list-heading>Måleenhet</cv-structured-list-heading>
           <cv-structured-list-heading>Kalorier per målenehet</cv-structured-list-heading>
+          <cv-structured-list-heading>Kalorier per måltid</cv-structured-list-heading>
           <cv-structured-list-heading>Total kalorier</cv-structured-list-heading>
+          <cv-structured-list-heading></cv-structured-list-heading>
         </template>
         <template slot="items">
           <IngredientRow
             v-for="item in items"
             v-bind:key="item.id"
-            v-bind:ingredientIn="item"
+            v-bind:numberOfMeals="numberOfMeals"
+            v-bind:initialIngredient="item"
             v-on:remove-row="removeRow"
             v-on:change="update"
+            v-on:auto-row="onAutoRow"
           />
 
           <cv-structured-list-data></cv-structured-list-data>
           <cv-structured-list-data></cv-structured-list-data>
           <cv-structured-list-data></cv-structured-list-data>
           <cv-structured-list-data></cv-structured-list-data>
+          <cv-structured-list-data>{{sumCaloriesPerMeal}}</cv-structured-list-data>
+          <cv-structured-list-data>{{sumCalories}}</cv-structured-list-data>
           <cv-structured-list-data></cv-structured-list-data>
-          <template v-if="numberOfMeals > 1">
-            <cv-structured-list-data>
-              {{ formatSum(sumCaloriesPerMeal)}} (
-              <strong>{{ formatSum(sumCalories)}}</strong>)
-            </cv-structured-list-data>
-          </template>
-          <template v-else>
-            <cv-structured-list-data>{{ formatSum(sumCaloriesPerMeal)}}</cv-structured-list-data>
-          </template>
         </template>
       </cv-structured-list>
     </cv-form>
@@ -50,9 +46,11 @@
 
 <script>
 import IngredientRow from "./IngredientRow.vue";
+import IngredientService from "../services/IngredientService";
+
+const ingredientService = new IngredientService();
 
 export default {
-  name: "app",
   data() {
     return {
       sumCalories: 0,
@@ -69,22 +67,36 @@ export default {
     this.addRow();
   },
   methods: {
-    formatSum(number) {
-      if (Number.isInteger(number)) {
-        return number;
-      } else {
-        return Number(number).toFixed(2);
-      }
-    },
     update(mutated) {
       let original = this.items.filter(item => item.index == mutated.index);
-      let itemIndex = this.items.findIndex(
-        element => element.index == mutated.index
-      );
+      let itemIndex = this.getItemIndex(mutated.index);
       let updated = { ...original, ...mutated };
       this.items.splice(itemIndex, 1, updated);
 
       this.calculateSum();
+    },
+
+    getItemIndex(itemIndex) 
+    {
+        return this.items.findIndex(
+            element => element.index == itemIndex
+        );
+    },
+
+    onAutoRow(itemIndex) {
+        let arrayIndex = this.getItemIndex(itemIndex);
+        let item = this.items[arrayIndex];
+        if (this.isLastItem(item) && this.isRowFilled(item)) {
+            this.addRow();
+        }
+    },
+
+    isLastItem(item) {
+      return this.items[this.items.length - 1].index == item.index;
+    },
+
+    isRowFilled(item) {
+      return item.caloriesPerUnit > 0 && item.unitAmount > 0;
     },
 
     calculateSum() {
@@ -92,7 +104,10 @@ export default {
         .map(item => item.totalCalories)
         .reduce((sum, next) => sum + next, 0);
 
-      this.sumCaloriesPerMeal = this.sumCalories / this.numberOfMeals;
+      this.sumCaloriesPerMeal = ingredientService.caloriesPerMeal(
+        this.sumCalories,
+        this.numberOfMeals
+      );
     },
 
     removeRow(index) {
@@ -107,9 +122,9 @@ export default {
         key: this.currentIndex,
         index: this.currentIndex,
         name: "",
-        amount: 0,
+        unitAmount: 0,
         unit: "",
-        caloriesPerAmount: 0,
+        caloriesPerUnit: 0,
         totalCalories: 0
       };
       this.items.push(ingredient);
@@ -118,19 +133,20 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .ingredient-row {
   display: flex;
   justify-content: space-between;
   margin-bottom: 2rem;
 }
 
-.bx--form-item {
-  margin: 0 40px;
-}
-
 .button-toolbar {
   display: flex;
   justify-content: flex-end;
+}
+
+.cv-structured-list-data {
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
 }
 </style>
