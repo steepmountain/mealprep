@@ -47,8 +47,11 @@
 <script>
 import IngredientRow from "./IngredientRow.vue";
 import IngredientService from "../services/IngredientService";
+import LocalStorageService from "../services/LocalStorageService";
 
 const ingredientService = new IngredientService();
+const localStorageIndex = "recipes";
+const localStorageService = new LocalStorageService(localStorageIndex);
 
 export default {
   data() {
@@ -76,19 +79,16 @@ export default {
       this.calculateSum();
     },
 
-    getItemIndex(itemIndex) 
-    {
-        return this.items.findIndex(
-            element => element.index == itemIndex
-        );
+    getItemIndex(itemIndex) {
+      return this.items.findIndex(element => element.index == itemIndex);
     },
 
     onAutoRow(itemIndex) {
-        let arrayIndex = this.getItemIndex(itemIndex);
-        let item = this.items[arrayIndex];
-        if (this.isLastItem(item) && this.isRowFilled(item)) {
-            this.addRow();
-        }
+      let arrayIndex = this.getItemIndex(itemIndex);
+      let item = this.items[arrayIndex];
+      if (this.isLastItem(item) && this.isRowFilled(item)) {
+        this.addRow();
+      }
     },
 
     isLastItem(item) {
@@ -128,6 +128,21 @@ export default {
         totalCalories: 0
       };
       this.items.push(ingredient);
+    },
+    saveRecipe(recipeName) {
+      let allItems = localStorageService.load();
+      allItems.push({
+        name: recipeName,
+        ingredients: this.items.map(ingredient => {
+          return {
+            name: ingredient.name,
+            unitAmount: ingredient.unitAmount,
+            unit: ingredient.unit,
+            caloriesPerUnit: ingredient.caloriesPerUnit
+          };
+        })
+      });
+      localStorageService.save(allItems);
     }
   }
 };
@@ -146,7 +161,7 @@ export default {
 }
 
 .cv-structured-list-data {
-    padding-top: 0.7rem;
-    padding-bottom: 0.7rem;
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
 }
 </style>
