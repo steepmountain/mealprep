@@ -41,7 +41,7 @@ const ingredientService = new IngredientService();
 
 export default {
   props: {
-    initialIngredient: {
+    ingredient: {
       index: Number,
       name: String,
       unitAmount: Number,
@@ -50,18 +50,6 @@ export default {
       totalCalories: Number
     },
     numberOfMeals: Number
-  },
-  data() {
-    return {
-      ingredient: {
-        index: this.initialIngredient.index,
-        name: this.initialIngredient.name,
-        unitAmount: this.initialIngredient.unitAmount,
-        unit: this.initialIngredient.unit,
-        caloriesPerUnit: this.initialIngredient.caloriesPerUnit,
-        totalCalories: this.initialIngredient.totalCalories
-      }
-    };
   },
   components: {
     Delete16

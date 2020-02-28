@@ -21,5 +21,6 @@
 
 # Future
 - Brukerkonto
-- Lagre ingredienser til måltid
+- Slett recipe
+- Lagre over eksisterende recipe
 - Finn hosting for asp net core

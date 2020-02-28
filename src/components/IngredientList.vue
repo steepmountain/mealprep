@@ -17,10 +17,11 @@
         </template>
         <template slot="items">
           <IngredientRow
-            v-for="item in recipe.ingredients"
+            v-for="(item, index) in recipe.ingredients"
             v-bind:key="item.id"
             v-bind:numberOfMeals="recipe.numberOfMeals"
-            v-bind:initialIngredient="item"
+            v-bind:ingredient="item"
+            v-bind:index="index"
             v-on:remove-row="removeRow"
             v-on:change="update"
             v-on:auto-row="onAutoRow"
@@ -146,6 +147,7 @@ export default {
       };
       this.recipe.ingredients.push(ingredient);
     },
+    
     saveRecipe(recipeName) {
       let allItems = localStorageService.load();
       allItems.push({

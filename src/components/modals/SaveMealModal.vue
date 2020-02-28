@@ -2,9 +2,15 @@
   <cv-modal :visible="showModal" @modal-hidden="$emit('hide')" @primary-click="sendSave">
     <template slot="title">Lagre måltid</template>
     <template slot="content">
-      <cv-text-input v-model="name" placeholder="Navn" />
-      <div v-if="saveState == SaveStates.Success">Lagret!</div>
-      <div v-if="saveState == SaveStates.Failure">Noe gikk galt.</div>
+      <div class="body">
+        <cv-inline-notification
+          kind="warning"
+          sub-title="Oppskriften lagres kun lokalt i nettleseren din. Ved tømming av cache vil informasjonen forsvinne"
+        ></cv-inline-notification>
+        <cv-text-input v-model="name" placeholder="Navn" />
+        <div v-if="saveState == SaveStates.Success">Lagret!</div>
+        <div v-if="saveState == SaveStates.Failure">Noe gikk galt.</div>
+      </div>
     </template>
     <template slot="secondary-button">Avbryt</template>
     <template slot="primary-button">Lagre</template>
@@ -37,4 +43,7 @@ export default {
 </script>
 
 <style>
+.body {
+  text-align: left !important;
+}
 </style>
