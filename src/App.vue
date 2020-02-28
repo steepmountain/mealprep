@@ -12,7 +12,7 @@
       <h1 class="logo">💪</h1>
       <h1>Prep That Meal</h1>
 
-      <IngredientList ref="ingredientList" v-bind:recipe="recipe"/>
+      <IngredientList ref="ingredientList" v-bind:recipe="recipe" />
 
       <LoadMealModal
         v-bind:showModal="loadMealModalVisible"
@@ -25,7 +25,7 @@
         v-on:save="saveMeal"
         ref="saveModal"
       />
-
+      <cv-toast-notification class="fixed-bottom" title="Obs!" sub-title="Dette er ikke et ferdig produkt og alle funksjoner er ikke fungerende."></cv-toast-notification>
       <!-- <cv-toolbar class="infobar">
         <p>Hvis totale kalorier her</p>
       </cv-toolbar>-->
@@ -51,8 +51,8 @@ export default {
       saveMealModalVisible: false,
       savedSuccessfully: true,
       recipe: {
-          ingredients: [],
-          numberOfMeals: 1
+        ingredients: [],
+        numberOfMeals: 1
       }
     };
   },
@@ -118,5 +118,12 @@ h1 {
   width: 100%;
   background: lightgray;
   padding: 1rem;
+}
+
+.fixed-bottom {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    text-align: left;
 }
 </style>
