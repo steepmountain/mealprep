@@ -2,11 +2,7 @@
   <div class="ingredient-list">
     <cv-form id="meal-form">
       <div class="button-toolbar">
-        <cv-number-input
-          label="Antall måltid"
-          v-model="numberOfMeals"
-          min="1"
-        />
+        <cv-number-input label="Antall måltid" v-model="recipe.numberOfMeals" min="1" />
         <cv-button @click="addRow" type="button">Ny rad</cv-button>
       </div>
       <cv-structured-list>
@@ -21,9 +17,9 @@
         </template>
         <template slot="items">
           <IngredientRow
-            v-for="item in items"
+            v-for="item in recipe.ingredients"
             v-bind:key="item.id"
-            v-bind:numberOfMeals="numberOfMeals"
+            v-bind:numberOfMeals="recipe.numberOfMeals"
             v-bind:initialIngredient="item"
             v-on:remove-row="removeRow"
             v-on:change="update"
@@ -54,31 +50,34 @@ const localStorageService = new LocalStorageService(localStorageIndex);
 
 export default {
   props: {
-    initialRecipe: {
+    recipe: {
       name: String,
       numberOfMeals: Number,
       ingredients: Array
     }
   },
-  data() {
-    return {
-      currentIndex: 1,
-      numberOfMeals: this.initialRecipe.numberOfMeals,
-      items: this.initialRecipe.ingredients
-    };
-  },
   computed: {
     sumCalories: function() {
-      return this.items
-        .map(item => item.totalCalories)
+      return this.recipe.ingredients
+        .map(item =>
+          ingredientService.calculateIngredientCalories(
+            item.caloriesPerUnit,
+            item.unitAmount
+          )
+        )
         .reduce((sum, next) => sum + next, 0);
     },
     sumCaloriesPerMeal: function() {
       return ingredientService.caloriesPerMeal(
-        this.items
-          .map(item => item.totalCalories)
+        this.recipe.ingredients
+          .map(item =>
+            ingredientService.calculateIngredientCalories(
+              item.caloriesPerUnit,
+              item.unitAmount
+            )
+          )
           .reduce((sum, next) => sum + next, 0),
-        this.numberOfMeals
+        this.recipe.numberOfMeals
       );
     }
   },
@@ -86,33 +85,40 @@ export default {
     IngredientRow
   },
   mounted: function() {
-    if (this.items.length == 0) {
+    if (this.recipe.ingredients.length == 0) {
       this.addRow();
     }
   },
   methods: {
     update(mutated) {
-      let original = this.items.filter(item => item.index == mutated.index);
+      let original = this.recipe.ingredients.filter(
+        item => item.index == mutated.index
+      );
       let itemIndex = this.getItemIndex(mutated.index);
       let updated = { ...original, ...mutated };
-      this.items.splice(itemIndex, 1, updated);
-
+      this.recipe.ingredients.splice(itemIndex, 1, updated);
     },
 
     getItemIndex(itemIndex) {
-      return this.items.findIndex(element => element.index == itemIndex);
+      return this.recipe.ingredients.findIndex(
+        element => element.index == itemIndex
+      );
     },
 
     onAutoRow(itemIndex) {
       let arrayIndex = this.getItemIndex(itemIndex);
-      let item = this.items[arrayIndex];
+      let item = this.recipe.ingredients[arrayIndex];
       if (this.isLastItem(item) && this.isRowFilled(item)) {
         this.addRow();
       }
     },
 
     isLastItem(item) {
-      return this.items[this.items.length - 1].index == item.index;
+      return (
+        this.recipe.ingredients[
+          this.recipe.ingredients.length - 1
+        ].index == item.index
+      );
     },
 
     isRowFilled(item) {
@@ -120,8 +126,10 @@ export default {
     },
 
     removeRow(index) {
-      let itemIndex = this.items.findIndex(element => element.index == index);
-      this.items.splice(itemIndex, 1);
+      let itemIndex = this.recipe.ingredients.findIndex(
+        element => element.index == index
+      );
+      this.recipe.ingredients.splice(itemIndex, 1);
     },
 
     addRow() {
@@ -135,14 +143,14 @@ export default {
         caloriesPerUnit: 0,
         totalCalories: 0
       };
-      this.items.push(ingredient);
+      this.recipe.ingredients.push(ingredient);
     },
     saveRecipe(recipeName) {
       let allItems = localStorageService.load();
       allItems.push({
         name: recipeName,
-        numberOfMeals: this.numberOfMeals,
-        ingredients: this.items.map(ingredient => {
+        numberOfMeals: this.recipe.numberOfMeals,
+        ingredients: this.recipe.ingredients.map(ingredient => {
           return {
             name: ingredient.name,
             unitAmount: ingredient.unitAmount,

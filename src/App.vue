@@ -12,7 +12,7 @@
       <h1 class="logo">💪</h1>
       <h1>Prep That Meal</h1>
 
-      <IngredientList ref="ingredientList" v-bind:initialRecipe="recipe"/>
+      <IngredientList ref="ingredientList" v-bind:recipe="recipe"/>
 
       <LoadMealModal
         v-bind:showModal="loadMealModalVisible"
