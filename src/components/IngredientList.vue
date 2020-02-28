@@ -6,7 +6,6 @@
           label="Antall måltid"
           v-model="numberOfMeals"
           min="1"
-          @input="calculateSum"
         />
         <cv-button @click="addRow" type="button">Ny rad</cv-button>
       </div>
@@ -54,20 +53,42 @@ const localStorageIndex = "recipes";
 const localStorageService = new LocalStorageService(localStorageIndex);
 
 export default {
+  props: {
+    initialRecipe: {
+      name: String,
+      numberOfMeals: Number,
+      ingredients: Array
+    }
+  },
   data() {
     return {
-      sumCalories: 0,
-      sumCaloriesPerMeal: 0,
       currentIndex: 1,
-      numberOfMeals: 1,
-      items: []
+      numberOfMeals: this.initialRecipe.numberOfMeals,
+      items: this.initialRecipe.ingredients
     };
+  },
+  computed: {
+    sumCalories: function() {
+      return this.items
+        .map(item => item.totalCalories)
+        .reduce((sum, next) => sum + next, 0);
+    },
+    sumCaloriesPerMeal: function() {
+      return ingredientService.caloriesPerMeal(
+        this.items
+          .map(item => item.totalCalories)
+          .reduce((sum, next) => sum + next, 0),
+        this.numberOfMeals
+      );
+    }
   },
   components: {
     IngredientRow
   },
   mounted: function() {
-    this.addRow();
+    if (this.items.length == 0) {
+      this.addRow();
+    }
   },
   methods: {
     update(mutated) {
@@ -76,7 +97,6 @@ export default {
       let updated = { ...original, ...mutated };
       this.items.splice(itemIndex, 1, updated);
 
-      this.calculateSum();
     },
 
     getItemIndex(itemIndex) {
@@ -99,21 +119,9 @@ export default {
       return item.caloriesPerUnit > 0 && item.unitAmount > 0;
     },
 
-    calculateSum() {
-      this.sumCalories = this.items
-        .map(item => item.totalCalories)
-        .reduce((sum, next) => sum + next, 0);
-
-      this.sumCaloriesPerMeal = ingredientService.caloriesPerMeal(
-        this.sumCalories,
-        this.numberOfMeals
-      );
-    },
-
     removeRow(index) {
       let itemIndex = this.items.findIndex(element => element.index == index);
       this.items.splice(itemIndex, 1);
-      this.calculateSum();
     },
 
     addRow() {
@@ -133,6 +141,7 @@ export default {
       let allItems = localStorageService.load();
       allItems.push({
         name: recipeName,
+        numberOfMeals: this.numberOfMeals,
         ingredients: this.items.map(ingredient => {
           return {
             name: ingredient.name,

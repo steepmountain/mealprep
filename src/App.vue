@@ -11,11 +11,19 @@
 
       <h1 class="logo">💪</h1>
       <h1>Prep That Meal</h1>
-      
-      <IngredientList ref="ingredientList" />
 
-      <LoadMealModal v-bind:showModal="loadMealModalVisible" v-on:hide="hideLoadMealModal"  />
-      <SaveMealModal v-bind:showModal="saveMealModalVisible" v-on:hide="hideSaveMealModal" v-on:save="saveMeal"/>
+      <IngredientList ref="ingredientList" v-bind:initialRecipe="recipe"/>
+
+      <LoadMealModal
+        v-bind:showModal="loadMealModalVisible"
+        v-on:hide="hideLoadMealModal"
+        v-on:load-recipe="loadRecipe"
+      />
+      <SaveMealModal
+        v-bind:showModal="saveMealModalVisible"
+        v-on:hide="hideSaveMealModal"
+        v-on:save="saveMeal"
+      />
 
       <!-- <cv-toolbar class="infobar">
         <p>Hvis totale kalorier her</p>
@@ -40,7 +48,11 @@ export default {
   data() {
     return {
       loadMealModalVisible: false,
-      saveMealModalVisible: false
+      saveMealModalVisible: false,
+      recipe: {
+          ingredients: [],
+          numberOfMeals: 1
+      }
     };
   },
   methods: {
@@ -57,7 +69,10 @@ export default {
       this.saveMealModalVisible = false;
     },
     saveMeal(recipeName) {
-        this.$refs.ingredientList.saveRecipe(recipeName);
+      this.$refs.ingredientList.saveRecipe(recipeName);
+    },
+    loadRecipe(recipe) {
+      this.recipe = recipe;
     }
   }
 };

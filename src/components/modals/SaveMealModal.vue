@@ -22,7 +22,7 @@ export default {
   methods: {
     sendSave() {
       this.$emit("save", this.name);
-    }
+    },
   }
 };
 </script>
