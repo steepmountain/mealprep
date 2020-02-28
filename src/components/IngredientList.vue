@@ -43,6 +43,7 @@
 import IngredientRow from "./IngredientRow.vue";
 import IngredientService from "../services/IngredientService";
 import LocalStorageService from "../services/LocalStorageService";
+import { SaveStates } from '../classes/SaveStates';
 
 const ingredientService = new IngredientService();
 const localStorageIndex = "recipes";
@@ -160,6 +161,7 @@ export default {
         })
       });
       localStorageService.save(allItems);
+      return SaveStates.Success;
     }
   }
 };

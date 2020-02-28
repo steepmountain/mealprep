@@ -23,6 +23,7 @@
         v-bind:showModal="saveMealModalVisible"
         v-on:hide="hideSaveMealModal"
         v-on:save="saveMeal"
+        ref="saveModal"
       />
 
       <!-- <cv-toolbar class="infobar">
@@ -36,7 +37,6 @@
 import IngredientList from "./components/IngredientList.vue";
 import LoadMealModal from "./components/modals/LoadMealModal.vue";
 import SaveMealModal from "./components/modals/SaveMealModal.vue";
-// import Header from "./components/Header.vue";
 
 export default {
   name: "app",
@@ -49,6 +49,7 @@ export default {
     return {
       loadMealModalVisible: false,
       saveMealModalVisible: false,
+      savedSuccessfully: true,
       recipe: {
           ingredients: [],
           numberOfMeals: 1
@@ -69,7 +70,8 @@ export default {
       this.saveMealModalVisible = false;
     },
     saveMeal(recipeName) {
-      this.$refs.ingredientList.saveRecipe(recipeName);
+      let result = this.$refs.ingredientList.saveRecipe(recipeName);
+      this.$refs.saveModal.setSaveState(result);
     },
     loadRecipe(recipe) {
       this.recipe = recipe;
