@@ -25,10 +25,14 @@
         v-on:save="saveMeal"
         ref="saveModal"
       />
-      <cv-toast-notification class="fixed-bottom" title="Obs!" sub-title="Dette er ikke et ferdig produkt og alle funksjoner er ikke fungerende."></cv-toast-notification>
-      <!-- <cv-toolbar class="infobar">
-        <p>Hvis totale kalorier her</p>
-      </cv-toolbar>-->
+
+      <div class="fixed-bottom" v-if="showFeatureToast">
+        <cv-toast-notification
+          @close="closeFeatureToast"
+          title="Obs!"
+          sub-title="Dette er ikke et ferdig produkt og alle funksjoner er ikke fungerende."
+        ></cv-toast-notification>
+      </div>
     </div>
   </div>
 </template>
@@ -50,6 +54,7 @@ export default {
       loadMealModalVisible: false,
       saveMealModalVisible: false,
       savedSuccessfully: true,
+      showFeatureToast: true,
       recipe: {
         ingredients: [],
         numberOfMeals: 1
@@ -75,6 +80,9 @@ export default {
     },
     loadRecipe(recipe) {
       this.recipe = recipe;
+    },
+    closeFeatureToast() {
+      this.showFeatureToast = false;
     }
   }
 };
@@ -109,21 +117,10 @@ h1 {
   justify-content: space-between;
 }
 
-.infobar {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 0 !important;
+.fixed-bottom {
   position: fixed;
   bottom: 0;
-  width: 100%;
-  background: lightgray;
-  padding: 1rem;
-}
-
-.fixed-bottom {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    text-align: left;
+  right: 0;
+  text-align: left;
 }
 </style>

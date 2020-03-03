@@ -7,8 +7,6 @@
       <cv-number-input
         v-model="ingredient.unitAmount"
         min="0"
-        @input="calculateCalories"
-        v-on:blur="$emit('auto-row', ingredient.index)"
       />
     </cv-structured-list-data>
     <cv-structured-list-data>
@@ -18,14 +16,12 @@
       <cv-number-input
         v-model="ingredient.caloriesPerUnit"
         min="0"
-        @input="calculateCalories"
-        v-on:blur="$emit('auto-row', ingredient.index)"
       />
     </cv-structured-list-data>
     <cv-structured-list-data>{{caloriesPerMeal}}</cv-structured-list-data>
     <cv-structured-list-data>{{totalCalories}}</cv-structured-list-data>
     <cv-structured-list-data>
-      <cv-button @click="$emit('remove-row', ingredient.index)" kind="danger">
+      <cv-button  kind="danger" @click="$emit('remove-row', ingredient)" type="button">
         Fjern
         <Delete16 class="bx--btn__icon" />
       </cv-button>
@@ -42,7 +38,6 @@ const ingredientService = new IngredientService();
 export default {
   props: {
     ingredient: {
-      index: Number,
       name: String,
       unitAmount: Number,
       unit: String,
@@ -71,11 +66,6 @@ export default {
       );
     }
   },
-  methods: {
-    calculateCalories() {
-      this.$emit("change", this.ingredient);
-    }
-  }
 };
 </script>
 

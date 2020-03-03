@@ -18,13 +18,10 @@
         <template slot="items">
           <IngredientRow
             v-for="(item, index) in recipe.ingredients"
-            v-bind:key="item.id"
+            v-bind:key="index"
             v-bind:numberOfMeals="recipe.numberOfMeals"
             v-bind:ingredient="item"
-            v-bind:index="index"
             v-on:remove-row="removeRow"
-            v-on:change="update"
-            v-on:auto-row="onAutoRow"
           />
 
           <cv-structured-list-data></cv-structured-list-data>
@@ -92,53 +89,13 @@ export default {
     }
   },
   methods: {
-    update(mutated) {
-      let original = this.recipe.ingredients.filter(
-        item => item.index == mutated.index
-      );
-      let itemIndex = this.getItemIndex(mutated.index);
-      let updated = { ...original, ...mutated };
-      this.recipe.ingredients.splice(itemIndex, 1, updated);
-    },
-
-    getItemIndex(itemIndex) {
-      return this.recipe.ingredients.findIndex(
-        element => element.index == itemIndex
-      );
-    },
-
-    onAutoRow(itemIndex) {
-      let arrayIndex = this.getItemIndex(itemIndex);
-      let item = this.recipe.ingredients[arrayIndex];
-      if (this.isLastItem(item) && this.isRowFilled(item)) {
-        this.addRow();
-      }
-    },
-
-    isLastItem(item) {
-      return (
-        this.recipe.ingredients[
-          this.recipe.ingredients.length - 1
-        ].index == item.index
-      );
-    },
-
-    isRowFilled(item) {
-      return item.caloriesPerUnit > 0 && item.unitAmount > 0;
-    },
-
-    removeRow(index) {
-      let itemIndex = this.recipe.ingredients.findIndex(
-        element => element.index == index
-      );
-      this.recipe.ingredients.splice(itemIndex, 1);
+    removeRow(ingredient) {
+      let index = this.recipe.ingredients.indexOf(ingredient);
+      this.recipe.ingredients.splice(index, 1);
     },
 
     addRow() {
-      this.currentIndex++;
       let ingredient = {
-        key: this.currentIndex,
-        index: this.currentIndex,
         name: "",
         unitAmount: 0,
         unit: "",
