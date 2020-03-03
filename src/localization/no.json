@@ -1,0 +1,23 @@
+{
+    "numberOfMeals": "Antall måltid",
+    "ingredient": "Ingrediens",
+    "amount": "Mengde",
+    "measurementUnit": "Måleenhet",
+    "caloriesPerMeasurementUnit": "Kalorier per måleenhet",
+    "caloriesPerMeal": "Kalorier per måltid",
+    "totalCalories": "Total kalorier",
+    "remove": "Fjern",
+    "newRow": "Ny rad",
+    "save": "Lagre",
+    "open": "Åpne",
+    "featureToastMessage": "Dette er ikke et ferdig produkt og alle funksjoner er ikke fungerende.",
+    "nb": "NB!",
+    "saveMeal": "Lagre måltid",
+    "saveMealToastMessage": "Oppskriften lagres kun lokalt i nettleseren din. Ved tømming av cache vil informasjonen forsvinne",
+    "cancel": "Avbryt",
+    "name": "Navn",
+    "openMeal": "Åpne måltid",
+    "noSavedMeals": "Ingen lagrede måltid.",
+    "saved": "Saved",
+    "somethingWentWrong": "Something went wrong."
+}

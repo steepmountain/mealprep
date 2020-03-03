@@ -1,24 +1,24 @@
 <template>
   <cv-modal :visible="showModal" @modal-hidden="$emit('hide')" @primary-click="sendSave">
-    <template slot="title">Lagre måltid</template>
+    <template slot="title">{{ $t('saveMeal') }}</template>
     <template slot="content">
       <div class="body">
         <cv-inline-notification
           kind="warning"
-          sub-title="Oppskriften lagres kun lokalt i nettleseren din. Ved tømming av cache vil informasjonen forsvinne"
+          :sub-title="saveMealToastMessage"
         ></cv-inline-notification>
-        <cv-text-input v-model="name" placeholder="Navn" />
-        <div v-if="saveState == SaveStates.Success">Lagret!</div>
-        <div v-if="saveState == SaveStates.Failure">Noe gikk galt.</div>
+        <cv-text-input v-model="name" :placeholder="namePlaceholder" />
+        <div v-if="saveState == SaveStates.Success">{{ $t('saved') }}</div>
+        <div v-if="saveState == SaveStates.Failure">{{ $t('somethingWentWrong') }}</div>
       </div>
     </template>
-    <template slot="secondary-button">Avbryt</template>
-    <template slot="primary-button">Lagre</template>
+    <template slot="secondary-button">{{ $t('cancel') }}</template>
+    <template slot="primary-button">{{ $t('save') }}</template>
   </cv-modal>
 </template>
 
 <script>
-import { SaveStates } from "../../classes/SaveStates";
+import { SaveStates } from "../../models/SaveStates";
 
 export default {
   props: {
@@ -28,8 +28,14 @@ export default {
     return {
       name: "",
       SaveStates: SaveStates,
-      saveState: SaveStates.Uninitialized
+      saveState: SaveStates.Uninitialized,
+      namePlaceholder: '',
+      notificationText: '',
     };
+  },
+  mounted: function() {
+    this.namePlaceholder = this.$t('name');
+    this.saveMealToastMessage = this.$t('saveMealToastMessage');
   },
   methods: {
     sendSave() {

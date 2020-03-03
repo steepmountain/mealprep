@@ -1,7 +1,7 @@
 <template>
   <cv-structured-list-item>
     <cv-structured-list-data>
-      <cv-text-input v-model="ingredient.name" placeholder="Ingrediens" />
+      <cv-text-input v-model="ingredient.name" :placeholder="ingredientNamePlaceholder" />
     </cv-structured-list-data>
     <cv-structured-list-data>
       <cv-number-input
@@ -10,7 +10,7 @@
       />
     </cv-structured-list-data>
     <cv-structured-list-data>
-      <cv-text-input v-model="ingredient.unit" placeholder="Måleenhet" />
+      <cv-text-input v-model="ingredient.unit" :placeholder="measurementUnitPlaceholder" />
     </cv-structured-list-data>
     <cv-structured-list-data>
       <cv-number-input
@@ -22,7 +22,7 @@
     <cv-structured-list-data>{{totalCalories}}</cv-structured-list-data>
     <cv-structured-list-data>
       <cv-button  kind="danger" @click="$emit('remove-row', ingredient)" type="button">
-        Fjern
+        {{ $t('remove') }}
         <Delete16 class="bx--btn__icon" />
       </cv-button>
     </cv-structured-list-data>
@@ -45,6 +45,16 @@ export default {
       totalCalories: Number
     },
     numberOfMeals: Number
+  },
+  data() {
+      return {
+          ingredientNamePlaceholder: '',
+          measurementUnitPlaceholder: '',
+      }
+  },
+  mounted() {
+      this.ingredientNamePlaceholder = this.$t('ingredient');
+      this.measurementUnitPlaceholder = this.$t('measurementUnit');
   },
   components: {
     Delete16

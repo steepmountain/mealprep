@@ -1,0 +1,23 @@
+{
+    "numberOfMeals": "Number of meals",
+    "ingredient": "Ingredient",
+    "amount": "Amount",
+    "measurementUnit": "Measurement unit",
+    "caloriesPerMeasurementUnit": "Calories per measurement unit",
+    "caloriesPerMeal": "Calories per meal",
+    "totalCalories": "Total calories",
+    "remove": "Remove",
+    "newRow": "New row",
+    "save": "Save",
+    "open": "Open",
+    "featureToastMessage": "This is not a finished product and some features may not work.",
+    "nb": "NB!",
+    "saveMeal": "Save meal",
+    "saveMealToastMessage": "The recipe is only saved in local storage and will be deleted if you clear your browser data.",
+    "cancel": "Cancel",
+    "name": "Name",
+    "openMeal": "Load meal",
+    "noSavedMeals": "No saved meals.",
+    "saved": "Lagret",
+    "somethingWentWrong": "Noe gikk galt."
+}

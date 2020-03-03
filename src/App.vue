@@ -4,14 +4,13 @@
       <cv-header aria-label="Carbon header" class="header">
         <cv-header-name href="javascript:void(0)" prefix="💪">[Prep That Meal]</cv-header-name>
         <div>
-          <cv-button @click="showSaveMealModal">Lagre</cv-button>
-          <cv-button kind="secondary" @click="showLoadMealModal">Åpne</cv-button>
+          <cv-button @click="showSaveMealModal">{{ $t('save' )}}</cv-button>
+          <cv-button kind="secondary" @click="showLoadMealModal">{{ $t('open') }}</cv-button>
         </div>
       </cv-header>
 
       <h1 class="logo">💪</h1>
       <h1>Prep That Meal</h1>
-
       <IngredientList ref="ingredientList" v-bind:recipe="recipe" />
 
       <LoadMealModal
@@ -29,8 +28,8 @@
       <div class="fixed-bottom" v-if="showFeatureToast">
         <cv-toast-notification
           @close="closeFeatureToast"
-          title="Obs!"
-          sub-title="Dette er ikke et ferdig produkt og alle funksjoner er ikke fungerende."
+          :title="toastTitle"
+          :sub-title="toastText"
         ></cv-toast-notification>
       </div>
     </div>
@@ -58,8 +57,14 @@ export default {
       recipe: {
         ingredients: [],
         numberOfMeals: 1
-      }
+      },
+      toastTitle: '',
+      toastText: '',
     };
+  },
+  mounted() {
+      this.toastText = this.$t('featureToastMessage');
+      this.toastTitle = this.$t('nb');
   },
   methods: {
     showLoadMealModal() {

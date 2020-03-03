@@ -11,7 +11,8 @@
     "@carbon/icons-vue": "^10.8.0",
     "@carbon/vue": "^2.20.1",
     "core-js": "^3.4.4",
-    "vue": "^2.6.10"
+    "vue": "^2.6.10",
+    "vue-i18n": "^8.15.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.1.0",

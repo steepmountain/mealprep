@@ -1,24 +1,24 @@
 <template>
   <cv-modal :visible="showModal" @modal-hidden="$emit('hide')" @modal-shown="show">
-    <template slot="title">Åpne måltid</template>
+    <template slot="title">{{ $t('openMeal') }}</template>
     <template slot="content">
       <div class="body">
         <cv-loading v-if="!loaded" :overlay="false"></cv-loading>
 
-        <div v-if="loaded && this.items.length == 0">Du har ingen lagrede måltid.</div>
+        <div v-if="loaded && this.items.length == 0"> {{ $t('noSavedMeals') }}</div>
 
         <div v-if="loaded">
           <div class="button-list-item" v-for="item in items" v-bind:key="item.id">
             <cv-button @click="$emit('load-recipe', item)" size="small">{{item.name}}</cv-button>
             <cv-button @click="$emit('remove-recipe', item.index)" kind="danger" size="small">
-              Slett
+              {{ $t('remove') }}
               <Delete16 class="bx--btn__icon" />
             </cv-button>
           </div>
         </div>
       </div>
     </template>
-    <template slot="secondary-button">Avbryt</template>
+    <template slot="secondary-button">{{ $t('cancel') }}</template>
   </cv-modal>
 </template>
 

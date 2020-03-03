@@ -2,17 +2,17 @@
   <div class="ingredient-list">
     <cv-form id="meal-form">
       <div class="button-toolbar">
-        <cv-number-input label="Antall måltid" v-model="recipe.numberOfMeals" min="1" />
-        <cv-button @click="addRow" type="button">Ny rad</cv-button>
+        <cv-number-input :label="numberOfMealsLabel" v-model="recipe.numberOfMeals" min="1" />
+        <cv-button @click="addRow" type="button">{{ $t('newRow') }}</cv-button>
       </div>
       <cv-structured-list>
         <template slot="headings">
-          <cv-structured-list-heading>Ingrediens</cv-structured-list-heading>
-          <cv-structured-list-heading>Mengde</cv-structured-list-heading>
-          <cv-structured-list-heading>Måleenhet</cv-structured-list-heading>
-          <cv-structured-list-heading>Kalorier per målenehet</cv-structured-list-heading>
-          <cv-structured-list-heading>Kalorier per måltid</cv-structured-list-heading>
-          <cv-structured-list-heading>Total kalorier</cv-structured-list-heading>
+          <cv-structured-list-heading>{{ $t('ingredient') }}</cv-structured-list-heading>
+          <cv-structured-list-heading>{{ $t('amount') }}</cv-structured-list-heading>
+          <cv-structured-list-heading>{{ $t('measurementUnit') }}</cv-structured-list-heading>
+          <cv-structured-list-heading>{{ $t('caloriesPerMeasurementUnit') }}t</cv-structured-list-heading>
+          <cv-structured-list-heading>{{ $t('caloriesPerMeal') }}</cv-structured-list-heading>
+          <cv-structured-list-heading>{{ $t('totalCalories') }}</cv-structured-list-heading>
           <cv-structured-list-heading></cv-structured-list-heading>
         </template>
         <template slot="items">
@@ -41,7 +41,7 @@
 import IngredientRow from "./IngredientRow.vue";
 import IngredientService from "../services/IngredientService";
 import LocalStorageService from "../services/LocalStorageService";
-import { SaveStates } from '../classes/SaveStates';
+import { SaveStates } from "../models/SaveStates";
 
 const ingredientService = new IngredientService();
 const localStorageIndex = "recipes";
@@ -54,6 +54,11 @@ export default {
       numberOfMeals: Number,
       ingredients: Array
     }
+  },
+  data() {
+    return {
+      numberOfMealsLabel: ""
+    };
   },
   computed: {
     sumCalories: function() {
@@ -83,10 +88,11 @@ export default {
   components: {
     IngredientRow
   },
-  mounted: function() {
+  mounted() {
     if (this.recipe.ingredients.length == 0) {
       this.addRow();
     }
+    this.numberOfMealsLabel = this.$t("numberOfMeals");
   },
   methods: {
     removeRow(ingredient) {
@@ -104,7 +110,7 @@ export default {
       };
       this.recipe.ingredients.push(ingredient);
     },
-    
+
     saveRecipe(recipeName) {
       let allItems = localStorageService.load();
       allItems.push({
