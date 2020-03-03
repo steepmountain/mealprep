@@ -3,7 +3,8 @@
     <div>
       <cv-header aria-label="Carbon header" class="header">
         <cv-header-name href="javascript:void(0)" prefix="💪">[Prep That Meal]</cv-header-name>
-        <div>
+        <div class="header-function-wrapper">
+            <LocaleSwitcher @change-locale="forceRender" :locales="['en', 'no']" />
           <cv-button @click="showSaveMealModal">{{ $t('save' )}}</cv-button>
           <cv-button kind="secondary" @click="showLoadMealModal">{{ $t('open') }}</cv-button>
         </div>
@@ -40,13 +41,15 @@
 import IngredientList from "./components/IngredientList.vue";
 import LoadMealModal from "./components/modals/LoadMealModal.vue";
 import SaveMealModal from "./components/modals/SaveMealModal.vue";
+import LocaleSwitcher from "./components/LocaleSwitcher.vue";
 
 export default {
   name: "app",
   components: {
     IngredientList,
     LoadMealModal,
-    SaveMealModal
+    SaveMealModal,
+    LocaleSwitcher
   },
   data() {
     return {
@@ -58,13 +61,13 @@ export default {
         ingredients: [],
         numberOfMeals: 1
       },
-      toastTitle: '',
-      toastText: '',
+      toastTitle: "",
+      toastText: ""
     };
   },
   mounted() {
-      this.toastText = this.$t('featureToastMessage');
-      this.toastTitle = this.$t('nb');
+    this.toastText = this.$t("featureToastMessage");
+    this.toastTitle = this.$t("nb");
   },
   methods: {
     showLoadMealModal() {
@@ -88,6 +91,9 @@ export default {
     },
     closeFeatureToast() {
       this.showFeatureToast = false;
+    },
+    forceRender() {
+      this.$forceUpdate();
     }
   }
 };
@@ -114,12 +120,16 @@ export default {
 }
 
 h1 {
-  margin: 3rem;
+  margin: 3rem !important;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
+}
+
+.header-function-wrapper {
+    display: flex;
 }
 
 .fixed-bottom {

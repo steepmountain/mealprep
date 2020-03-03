@@ -30,7 +30,7 @@ export default {
       SaveStates: SaveStates,
       saveState: SaveStates.Uninitialized,
       namePlaceholder: '',
-      notificationText: '',
+      saveMealToastMessage: '',
     };
   },
   mounted: function() {
