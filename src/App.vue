@@ -4,7 +4,7 @@
       <cv-header aria-label="Carbon header" class="header">
         <cv-header-name href="javascript:void(0)" prefix="💪">[Prep That Meal]</cv-header-name>
         <div class="header-function-wrapper">
-            <LocaleSwitcher @change-locale="forceRender" :locales="['en', 'no']" />
+          <LocaleSwitcher @change-locale="forceRender" :locales="['en', 'no']" />
           <cv-button @click="showSaveMealModal">{{ $t('save' )}}</cv-button>
           <cv-button kind="secondary" @click="showLoadMealModal">{{ $t('open') }}</cv-button>
         </div>
@@ -60,14 +60,16 @@ export default {
       recipe: {
         ingredients: [],
         numberOfMeals: 1
-      },
-      toastTitle: "",
-      toastText: ""
+      }
     };
   },
-  mounted() {
-    this.toastText = this.$t("featureToastMessage");
-    this.toastTitle = this.$t("nb");
+  computed: {
+    toastText() {
+      return this.$t("featureToastMessage");
+    },
+    toastTitle() {
+      return this.$t("nb");
+    }
   },
   methods: {
     showLoadMealModal() {
@@ -129,7 +131,7 @@ h1 {
 }
 
 .header-function-wrapper {
-    display: flex;
+  display: flex;
 }
 
 .fixed-bottom {

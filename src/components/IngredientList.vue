@@ -55,11 +55,6 @@ export default {
       ingredients: Array
     }
   },
-  data() {
-    return {
-      numberOfMealsLabel: ""
-    };
-  },
   computed: {
     sumCalories: function() {
       return this.recipe.ingredients
@@ -83,6 +78,9 @@ export default {
           .reduce((sum, next) => sum + next, 0),
         this.recipe.numberOfMeals
       );
+    },
+    numberOfMealsLabel: function(){
+        return this.$t("numberOfMeals");
     }
   },
   components: {
@@ -92,7 +90,6 @@ export default {
     if (this.recipe.ingredients.length == 0) {
       this.addRow();
     }
-    this.numberOfMealsLabel = this.$t("numberOfMeals");
   },
   methods: {
     removeRow(ingredient) {

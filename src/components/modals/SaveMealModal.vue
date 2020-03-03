@@ -3,10 +3,7 @@
     <template slot="title">{{ $t('saveMeal') }}</template>
     <template slot="content">
       <div class="body">
-        <cv-inline-notification
-          kind="warning"
-          :sub-title="saveMealToastMessage"
-        ></cv-inline-notification>
+        <cv-inline-notification kind="warning" :sub-title="saveMealToastMessage"></cv-inline-notification>
         <cv-text-input v-model="name" :placeholder="namePlaceholder" />
         <div v-if="saveState == SaveStates.Success">{{ $t('saved') }}</div>
         <div v-if="saveState == SaveStates.Failure">{{ $t('somethingWentWrong') }}</div>
@@ -29,13 +26,15 @@ export default {
       name: "",
       SaveStates: SaveStates,
       saveState: SaveStates.Uninitialized,
-      namePlaceholder: '',
-      saveMealToastMessage: '',
     };
   },
-  mounted: function() {
-    this.namePlaceholder = this.$t('name');
-    this.saveMealToastMessage = this.$t('saveMealToastMessage');
+  computed: {
+    namePlaceholder() {
+      return this.$t("name");
+    },
+    saveMealToastMessage() {
+      return this.$t("saveMealToastMessage");
+    }
   },
   methods: {
     sendSave() {

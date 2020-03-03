@@ -4,24 +4,18 @@
       <cv-text-input v-model="ingredient.name" :placeholder="ingredientNamePlaceholder" />
     </cv-structured-list-data>
     <cv-structured-list-data>
-      <cv-number-input
-        v-model="ingredient.unitAmount"
-        min="0"
-      />
+      <cv-number-input v-model="ingredient.unitAmount" min="0" />
     </cv-structured-list-data>
     <cv-structured-list-data>
       <cv-text-input v-model="ingredient.unit" :placeholder="measurementUnitPlaceholder" />
     </cv-structured-list-data>
     <cv-structured-list-data>
-      <cv-number-input
-        v-model="ingredient.caloriesPerUnit"
-        min="0"
-      />
+      <cv-number-input v-model="ingredient.caloriesPerUnit" min="0" />
     </cv-structured-list-data>
     <cv-structured-list-data>{{caloriesPerMeal}}</cv-structured-list-data>
     <cv-structured-list-data>{{totalCalories}}</cv-structured-list-data>
     <cv-structured-list-data>
-      <cv-button  kind="danger" @click="$emit('remove-row', ingredient)" type="button">
+      <cv-button kind="danger" @click="$emit('remove-row', ingredient)" type="button">
         {{ $t('remove') }}
         <Delete16 class="bx--btn__icon" />
       </cv-button>
@@ -46,16 +40,6 @@ export default {
     },
     numberOfMeals: Number
   },
-  data() {
-      return {
-          ingredientNamePlaceholder: '',
-          measurementUnitPlaceholder: '',
-      }
-  },
-  mounted() {
-      this.ingredientNamePlaceholder = this.$t('ingredient');
-      this.measurementUnitPlaceholder = this.$t('measurementUnit');
-  },
   components: {
     Delete16
   },
@@ -74,8 +58,14 @@ export default {
         this.ingredient.caloriesPerUnit,
         this.ingredient.unitAmount
       );
+    },
+    ingredientNamePlaceholder() {
+      return this.$t("ingredient");
+    },
+    measurementUnitPlaceholder() {
+      return this.$t("measurementUnit");
     }
-  },
+  }
 };
 </script>
 
