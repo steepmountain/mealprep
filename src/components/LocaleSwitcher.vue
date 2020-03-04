@@ -1,5 +1,5 @@
 <template>
-    <cv-dropdown class="locale-switcher" @change="setLocale" :value="activeLocale" :theme="ight-theme">
+    <cv-dropdown class="locale-switcher" @change="setLocale" :value="activeLocale" >
       <cv-dropdown-item
         v-for="locale in locales"
         :key="locale.id"

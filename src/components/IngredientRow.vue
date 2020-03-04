@@ -1,13 +1,13 @@
 <template>
   <cv-structured-list-item>
     <cv-structured-list-data>
-      <cv-text-input v-model="ingredient.name" :placeholder="ingredientNamePlaceholder" />
+      <cv-text-input v-model="ingredient.name" :placeholder="$t('name')" />
     </cv-structured-list-data>
     <cv-structured-list-data>
       <cv-number-input v-model="ingredient.unitAmount" min="0" />
     </cv-structured-list-data>
     <cv-structured-list-data>
-      <cv-text-input v-model="ingredient.unit" :placeholder="measurementUnitPlaceholder" />
+      <cv-text-input v-model="ingredient.unit" :placeholder="$t('measurementUnit')" />
     </cv-structured-list-data>
     <cv-structured-list-data>
       <cv-number-input v-model="ingredient.caloriesPerUnit" min="0" />
@@ -59,12 +59,6 @@ export default {
         this.ingredient.unitAmount
       );
     },
-    ingredientNamePlaceholder() {
-      return this.$t("ingredient");
-    },
-    measurementUnitPlaceholder() {
-      return this.$t("measurementUnit");
-    }
   }
 };
 </script>

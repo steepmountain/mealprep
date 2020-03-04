@@ -29,8 +29,8 @@
       <div class="fixed-bottom" v-if="showFeatureToast">
         <cv-toast-notification
           @close="closeFeatureToast"
-          :title="toastTitle"
-          :sub-title="toastText"
+          :title="$t('nb')"
+          :sub-title="$t('featureToastMessage')"
         ></cv-toast-notification>
       </div>
     </div>
@@ -62,14 +62,6 @@ export default {
         numberOfMeals: 1
       }
     };
-  },
-  computed: {
-    toastText() {
-      return this.$t("featureToastMessage");
-    },
-    toastTitle() {
-      return this.$t("nb");
-    }
   },
   methods: {
     showLoadMealModal() {
