@@ -1,11 +1,10 @@
 <template>
-    <cv-dropdown class="locale-switcher" @change="setLocale" :value="activeLocale" >
-      <cv-dropdown-item
-        v-for="locale in locales"
-        :key="locale.id"
-        :value="locale"
-      >{{ getLanguageString(locale) }}</cv-dropdown-item>
-    </cv-dropdown>
+  <div>
+    <cv-button kind="secondary" v-for="locale in notActiveLocales" :key="locale.id" :value="locale" @click="setLocale(locale)"> 
+      {{ getLanguageString(locale) }}
+      <span class="flag" :lang="locale"></span>
+    </cv-button>
+  </div>
 </template>
 
 <script>
@@ -29,6 +28,11 @@ export default {
       activeLocale: Vue.config.lang
     };
   },
+  computed: {
+    notActiveLocales() {
+      return this.locales.filter(element => element != this.activeLocale );
+    }
+  },
   methods: {
     setLocale: function(locale) {
       Vue.config.lang = locale;
@@ -45,7 +49,22 @@ export default {
 </script>
 
 <style scoped>
-.locale-switcher {
-  min-width: 150px;
+
+.flag {
+  max-width: 20px;
+  height: 14px;
+  width: 18px;
+  display: inline-block;
+  margin-left: .3rem;
+}
+
+.flag:lang(no) {
+  background: url("../assets/no_flag.svg");
+  background-size: cover;
+}
+
+.flag:lang(en) {
+  background: url("../assets/us_flag.svg");
+  background-size: cover;
 }
 </style>
