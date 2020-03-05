@@ -10,7 +10,7 @@
           <cv-structured-list-heading>{{ $t('ingredient') }}</cv-structured-list-heading>
           <cv-structured-list-heading>{{ $t('amount') }}</cv-structured-list-heading>
           <cv-structured-list-heading>{{ $t('measurementUnit') }}</cv-structured-list-heading>
-          <cv-structured-list-heading>{{ $t('caloriesPerMeasurementUnit') }}t</cv-structured-list-heading>
+          <cv-structured-list-heading>{{ $t('caloriesPerMeasurementUnit') }}</cv-structured-list-heading>
           <cv-structured-list-heading>{{ $t('caloriesPerMeal') }}</cv-structured-list-heading>
           <cv-structured-list-heading>{{ $t('totalCalories') }}</cv-structured-list-heading>
           <cv-structured-list-heading></cv-structured-list-heading>
