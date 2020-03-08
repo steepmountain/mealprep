@@ -9,7 +9,7 @@ namespace MealprepFull.Data.Entities.Recipes
     public class Recipe
     {
         public int Id { get; set; }
-        public AppUser Owner { get; set; }
+        public ApplicationUser Owner { get; set; }
         public string Name { get; set; }
         public List<Ingredient> Ingredients { get; set; }
         public int NumberOfMeals { get; set; }

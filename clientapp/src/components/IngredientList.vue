@@ -2,7 +2,13 @@
   <div class="ingredient-list">
     <cv-form id="meal-form">
       <div class="button-toolbar">
+          <div class="button-toolbar">
         <cv-number-input :label="numberOfMealsLabel" v-model="recipe.numberOfMeals" min="1" />
+        <cv-checkbox
+          :label="autoLookupLabel"
+          v-model="autoLookup"
+        ></cv-checkbox>
+        </div>
         <cv-button @click="addRow" type="button">{{ $t('newRow') }}</cv-button>
       </div>
       <cv-structured-list>
@@ -22,6 +28,7 @@
             v-bind:numberOfMeals="recipe.numberOfMeals"
             v-bind:ingredient="item"
             v-on:remove-row="removeRow"
+            v-bind:autoLookup="autoLookup"
           />
 
           <cv-structured-list-data></cv-structured-list-data>
@@ -55,6 +62,12 @@ export default {
       ingredients: Array
     }
   },
+  data() {
+      return {
+          autoLookup: true,
+          autoLookupLabel: "Sok automatisk"
+      }
+  },
   computed: {
     sumCalories: function() {
       return this.recipe.ingredients
@@ -79,8 +92,8 @@ export default {
         this.recipe.numberOfMeals
       );
     },
-    numberOfMealsLabel: function(){
-        return this.$t("numberOfMeals");
+    numberOfMealsLabel: function() {
+      return this.$t("numberOfMeals");
     }
   },
   components: {
@@ -138,7 +151,7 @@ export default {
 
 .button-toolbar {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 }
 
 .cv-structured-list-data {

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MealprepFull.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<AppUser, AppRole, int>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) {}
 

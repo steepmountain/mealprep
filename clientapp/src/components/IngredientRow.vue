@@ -1,13 +1,13 @@
 <template>
   <cv-structured-list-item>
     <cv-structured-list-data>
-      <cv-text-input v-model="ingredient.name" :placeholder="$t('name')" />
+      <cv-text-input v-model="ingredient.name" :placeholder="$t('name')" @change="actionChange" />
     </cv-structured-list-data>
     <cv-structured-list-data>
       <cv-number-input v-model="ingredient.unitAmount" min="0" />
     </cv-structured-list-data>
     <cv-structured-list-data>
-      <cv-text-input v-model="ingredient.unit" :placeholder="$t('measurementUnit')" />
+      <cv-text-input v-model="ingredient.unit" :placeholder="$t('measurementUnit')" @change="actionChange" />
     </cv-structured-list-data>
     <cv-structured-list-data>
       <cv-number-input v-model="ingredient.caloriesPerUnit" min="0" />
@@ -26,6 +26,7 @@
 <script>
 import IngredientService from "../services/IngredientService";
 import Delete16 from "@carbon/icons-vue/es/delete/16";
+import axios from "axios";
 
 const ingredientService = new IngredientService();
 
@@ -38,7 +39,11 @@ export default {
       caloriesPerUnit: Number,
       totalCalories: Number
     },
-    numberOfMeals: Number
+    numberOfMeals: Number,
+    autoLookup: {
+        default: true, 
+        type: Boolean
+    }
   },
   components: {
     Delete16
@@ -58,7 +63,28 @@ export default {
         this.ingredient.caloriesPerUnit,
         this.ingredient.unitAmount
       );
-    },
+    }
+  },
+  methods: {
+    actionChange() {
+      if (!this.autoLookup || this.ingredient.name < 2) {
+        return;
+      }
+
+      let unitAmount = 1;
+      let queryString = `${this.ingredient.name} ${unitAmount} ${this.ingredient.unit}`.trim();
+
+      axios.get(`/api/ingredient?query=${queryString}`).then(response => {
+        response.data
+          .forEach(element => {
+            this.ingredient.name = element.name;
+            this.ingredient.unitAmount = element.amount;
+            this.ingredient.unit = element.measurementUnit;
+            this.ingredient.caloriesPerUnit =
+              Math.round((element.caloriesPerMeasurementUnit + Number.EPSILON) * 100) / 100;
+          })
+      });
+    }
   }
 };
 </script>

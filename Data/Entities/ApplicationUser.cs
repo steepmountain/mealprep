@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MealprepFull.Data.Entities
 {
-    public class AppUser : IdentityUser<int>
+    public class ApplicationUser : IdentityUser
     {
     }
 }
