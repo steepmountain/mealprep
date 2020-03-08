@@ -6,6 +6,7 @@
         <cv-number-input :label="numberOfMealsLabel" v-model="recipe.numberOfMeals" min="1" />
         <cv-checkbox
           :label="autoLookupLabel"
+          :value="autoLookup"
           v-model="autoLookup"
         ></cv-checkbox>
         </div>
