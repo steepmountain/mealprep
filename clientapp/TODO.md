@@ -1,6 +1,6 @@
 # TODO
 - Nutrinionix API
-  - BUG: computed properties for ingredient name and ingredient unit will both trigger another search when set through the previous search. fix this
+  - BUG: computed properties for ingredient name and ingredient unit will both trigger another search when set through the previous search. this means they can trigger each other multiple times in a row. stop this.
 - ASP.NET Core 2.2 backend
 	- JWT for Cookie authentication in the SPA
 	- Identity or IdentityServer4 for the user account?
