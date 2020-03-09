@@ -4,11 +4,6 @@
       <div class="button-toolbar">
           <div class="button-toolbar">
         <cv-number-input :label="numberOfMealsLabel" v-model="recipe.numberOfMeals" min="1" />
-        <cv-checkbox
-          :label="autoLookupLabel"
-          :value="autoLookup"
-          v-model="autoLookup"
-        ></cv-checkbox>
         </div>
         <cv-button @click="addRow" type="button">{{ $t('newRow') }}</cv-button>
       </div>
@@ -29,7 +24,6 @@
             v-bind:numberOfMeals="recipe.numberOfMeals"
             v-bind:ingredient="item"
             v-on:remove-row="removeRow"
-            v-bind:autoLookup="autoLookup"
           />
 
           <cv-structured-list-data></cv-structured-list-data>
@@ -62,12 +56,6 @@ export default {
       numberOfMeals: Number,
       ingredients: Array
     }
-  },
-  data() {
-      return {
-          autoLookup: true,
-          autoLookupLabel: "Sok automatisk"
-      }
   },
   computed: {
     sumCalories: function() {
@@ -114,7 +102,7 @@ export default {
     addRow() {
       let ingredient = {
         name: "",
-        unitAmount: 0,
+        unitAmount: 1,
         unit: "",
         caloriesPerUnit: 0,
         totalCalories: 0

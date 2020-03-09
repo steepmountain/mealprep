@@ -1,42 +1,22 @@
 <template>
   <cv-structured-list-item>
     <cv-structured-list-data>
-      <cv-text-input
-        v-if="searchState == SearchStates.TextBox"
-        v-model="ingredient.name"
-        :placeholder="$t('name')"
-      />
-      <cv-button
-        kind="primary"
-        type="button"
-        v-if="searchState == SearchStates.TextBox"
-        @click="actionChange"
-      >
-        {{ $t('search') }}
-        <Search16 class="bx--btn__icon" />
-      </cv-button>
-
+      <cv-loading :overlay="true" v-if="searchState == SearchStates.NutrientSearching" />
       <cv-combo-box
-        v-if="searchState == SearchStates.ComboBox"
-        :label="$t('chooseOne')"
+        class="input-margin-fix"
+        v-loading="searchState == SearchStates.InstantSearching"
+        :label="$t('name')"
         :options="ingredientOptions"
-        @change="nutrients"
+        @filter="onFilter"
+        @change="nutrientsSearch"
+        ref="ingredientNameCombobox"
       ></cv-combo-box>
-      <cv-button
-        kind="danger"
-        type="button"
-        v-if="searchState == SearchStates.ComboBox"
-        @click="resetCombobox"
-      >
-        {{ $t('reset') }}
-        <Search16 class="bx--btn__icon" />
-      </cv-button>
     </cv-structured-list-data>
     <cv-structured-list-data>
       <cv-number-input v-model="ingredient.unitAmount" min="0" />
     </cv-structured-list-data>
     <cv-structured-list-data>
-      <cv-text-input v-model="ingredient.unit" :placeholder="$t('measurementUnit')" />
+      <cv-text-input v-model="computedUnit" :placeholder="$t('measurementUnit')" />
     </cv-structured-list-data>
     <cv-structured-list-data>
       <cv-number-input v-model="ingredient.caloriesPerUnit" min="0" />
@@ -55,40 +35,42 @@
 <script>
 import IngredientService from "../services/IngredientService";
 import Delete16 from "@carbon/icons-vue/es/delete/16";
-import Search16 from "@carbon/icons-vue/es/search/16";
 import axios from "axios";
 import { SearchState } from "../models/SearchState";
+import _ from "lodash";
 
 const ingredientService = new IngredientService();
 
 export default {
   props: {
     ingredient: {
-      name: String,
-      unitAmount: Number,
+      name: { type: String, default: "" },
+      unitAmount: { type: Number, default: 1 },
       unit: String,
       caloriesPerUnit: Number,
       totalCalories: Number
     },
-    numberOfMeals: Number,
-    autoLookup: {
-      default: true,
-      type: Boolean
-    }
+    numberOfMeals: Number
   },
   data() {
     return {
       SearchStates: SearchState,
-      searchState: SearchState.TextBox,
-      ingredientOptions: [],
-      iconUrl: "https://img.icons8.com/material/4ac144/256/user-male.png"
+      searchState: SearchState.NotSearching,
+      ingredientOptions: []
     };
   },
   components: {
-    Delete16,
-    Search16
+    Delete16
   },
   computed: {
+    computedUnit: {
+      get() {
+        return this.ingredient.unit;
+      },
+      set(value) {
+        this.ingredient.unit = value;
+      }
+    },
     caloriesPerMeal: function() {
       return ingredientService.caloriesPerMeal(
         ingredientService.calculateIngredientCalories(
@@ -105,42 +87,80 @@ export default {
       );
     }
   },
+  watch: {
+    computedUnit(newValue) {
+        this.ingredient.unit = newValue;
+        this.debounceNutrientSearch();
+    }
+  },
+  created() {
+      this.debounceNutrientSearch = _.debounce(this.nutrientsSearch, 500);
+      this.debounceInstantSearch = _.debounce(this.instantSearch, 500);
+  },
   methods: {
     resetCombobox() {
-      this.searchState = this.SearchStates.TextBox;
       this.ingredientOptions = [];
     },
-    actionChange() {
-      if (!this.autoLookup || this.ingredient.name < 2) {
+    onFilter(filter) {
+      this.ingredient.name = filter ?? "";
+      this.debounceInstantSearch();
+    },
+    instantSearch() {
+      if (this.ingredient.name < 2) {
         return;
       }
-
-      //   let unitAmount = 1;
-      let queryString = `${this.ingredient.name}`; //   ${unitAmount} ${this.ingredient.unit}`.trim();
-
-      axios.get(`/api/food/lookup?query=${queryString}`).then(response => {
-        response.data.forEach(element => {
-          this.ingredientOptions.push({
-            name: element.name,
-            value: element.name,
-            label: element.name
+      this.startInstantSearch();
+      let queryString = `${this.ingredient.name}`;
+      axios
+        .get(`/api/food/lookup?query=${queryString}`)
+        .then(response => {
+          this.resetCombobox();
+          response.data.forEach(element => {
+            this.ingredientOptions.push({
+              name: element.name,
+              value: element.name,
+              label: element.name
+            });
           });
-          this.searchState = this.SearchStates.ComboBox;
-        });
-      });
+        })
+        .catch(error => window.console.log(error.Response))
+        .then(() => this.endInstantSearch());
     },
-    nutrients() {
-      let queryString = `${this.ingredient.name} ${this.ingredientOptions.unitAmount} ${this.ingredient.unit}`.trim();
-      axios.get(`/api/food/nutrition?query=${queryString}`).then(response => {
-        let element = response.data[0];
-        this.ingredient.name = element.name;
-        this.ingredient.unitAmount = element.amount;
-        this.ingredient.unit = element.measurementUnit;
-        this.ingredient.caloriesPerUnit =
-          Math.round(
-            (element.caloriesPerMeasurementUnit + Number.EPSILON) * 100
-          ) / 100;
-      });
+    startInstantSearch() {
+      this.$refs.ingredientNameCombobox.doOpen(false);
+      this.searchState = this.SearchStates.InstantSearching;
+    },
+    endInstantSearch() {
+      this.searchState = this.SearchStates.HasSearched;
+      this.$refs.ingredientNameCombobox.doOpen(true);
+    },
+    nutrientsSearch() {
+      if (this.searchState != this.SearchStates.HasSearched) {
+        return;
+      }
+      this.startNutrientSearch();
+      let queryString = `${this.ingredient.name} ${this.ingredient.unitAmount} ${this.ingredient.unit}`.trim();
+      axios
+        .get(`/api/food/nutrition?query=${queryString}`)
+        .then(response => {
+          let element = response.data[0];
+          this.ingredient.name = element.name;
+          this.ingredient.unit = element.measurementUnit;
+          this.ingredient.caloriesPerUnit =
+            Math.round(
+              (element.caloriesPerMeasurementUnit + Number.EPSILON) * 100
+            ) / 100;
+        })
+        .catch(error => window.console.log(error))
+        .then(() => this.endNutrientSearch());
+    },
+    startNutrientSearch() {
+      this.searchState = this.SearchStates.NutrientSearching;
+      this.$refs.ingredientNameCombobox.doOpen(false);
+    },
+    endNutrientSearch() {
+      this.searchState = this.SearchStates.HasSearched;
+      this.$refs.ingredientNameCombobox.doOpen(false);
     }
   }
 };
@@ -160,5 +180,9 @@ export default {
 .row-button svg {
   fill: white;
   outline: white;
+}
+
+.input-margin-fix {
+  margin-top: 0.5rem;
 }
 </style>

@@ -4,11 +4,9 @@ using MealprepFull.Models.Nutritionix;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RestSharp;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static MealprepFull.Models.Nutritionix.NutritionixIngredient;
 
 namespace MealprepFull.Services
 {
@@ -29,7 +27,22 @@ namespace MealprepFull.Services
             _client.AddDefaultHeaders(headers);
         }
 
-        public async Task<List<Ingredient>> Food(string naturalQuery)
+        public async Task<List<InstantSearchResponse.Common>> IngredientLookup(string naturalQuery)
+        {
+            var request = new RestRequest("/search/instant", DataFormat.Json);
+            request.AddParameter("application/x-www-form-urlencoded", $"&query={naturalQuery}", ParameterType.RequestBody);
+            request.Method = Method.POST;
+            var response = await _client.ExecuteAsync(request);
+
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                return new List<InstantSearchResponse.Common>();
+            }
+
+            return JsonConvert.DeserializeObject<InstantSearchResponse.Rootobject>(response.Content).common.ToList();
+        }
+
+        public async Task<List<NutrientResponse.Food>> NutritionInformation(string naturalQuery)
         {
             var request = new RestRequest("/natural/nutrients", DataFormat.Json);
             request.AddParameter("application/x-www-form-urlencoded", $"timezone=US/Eastern&query={naturalQuery}", ParameterType.RequestBody);
@@ -38,10 +51,10 @@ namespace MealprepFull.Services
             
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {
-                return new List<Ingredient>();
+                return new List<NutrientResponse.Food>();
             }
             
-            return JsonConvert.DeserializeObject<Rootobject>(response.Content).foods.AsIngredients().ToList();
+            return JsonConvert.DeserializeObject<NutrientResponse.Rootobject>(response.Content).foods.ToList();
         }
     }
 }

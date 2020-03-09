@@ -1,5 +1,6 @@
 export const SearchState = {
-    TextBox: 0,
-    ComboBox: 1,
-    Searching: 2,
+    NotSearching: 0,
+    InstantSearching: 1,
+    NutrientSearching: 2,
+    HasSearched: 3,
 }

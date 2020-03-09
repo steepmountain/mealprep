@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MealprepFull.Data;
 using MealprepFull.Data.Entities;
+using MealprepFull.Extensions;
 using MealprepFull.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -15,7 +16,7 @@ using Microsoft.EntityFrameworkCore;
 namespace MealprepFull.Controllers
 {
     [ApiController]
-    [Route("api/ingredient")]
+    [Route("api/food")]
     public class NutritionixController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -27,9 +28,16 @@ namespace MealprepFull.Controllers
             _nutritionixService = nutritionixService;
         }
 
-        public async Task<IActionResult> Ingredient(string query)
+        [Route("nutrition")]
+        public async Task<IActionResult> Nutrition(string query)
         {
-            return Json(await _nutritionixService.Food(query));
+            return Json((await _nutritionixService.NutritionInformation(query)).AsIngredients());
+        }
+
+        [Route("lookup")]
+        public async Task<IActionResult> Lookup(string query)
+        {
+            return Json((await _nutritionixService.IngredientLookup(query)).AsIngredients());
         }
     }
 }

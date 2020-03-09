@@ -1,5 +1,6 @@
 ﻿using MealprepFull.Models.Nutritionix;
-using static MealprepFull.Models.Nutritionix.NutritionixIngredient;
+using static MealprepFull.Models.Nutritionix.InstantSearchResponse;
+using static MealprepFull.Models.Nutritionix.NutrientResponse;
 
 namespace MealprepFull.Data.Entities.Recipes
 {
@@ -10,13 +11,5 @@ namespace MealprepFull.Data.Entities.Recipes
         public double Amount { get; set; }
         public string MeasurementUnit { get; set; }
         public double CaloriesPerMeasurementUnit { get; set; }
-
-        public Ingredient(Food nutritionixIngredient)
-        {
-            Name = nutritionixIngredient.food_name;
-            Amount = nutritionixIngredient.serving_qty;
-            MeasurementUnit = nutritionixIngredient.serving_unit;
-            CaloriesPerMeasurementUnit = nutritionixIngredient.nf_calories / nutritionixIngredient.serving_qty;
-        }
     }
 }
