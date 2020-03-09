@@ -1,5 +1,6 @@
 # TODO
 - Nutrinionix API
+	- cvCombobox that AJAX calls when the input changes. Dynamically adds to the list and filters. 
 - ASP.NET Core 2.2 backend
 	- JWT for Cookie authentication in the SPA
 	- Identity or IdentityServer4 for the user account?
