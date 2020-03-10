@@ -83,7 +83,7 @@ export default {
     },
     saveMeal(recipeName) {
       let result = this.$refs.ingredientList.saveRecipe(recipeName);
-      this.$refs.saveModal.setSaveState(result);
+      this.$refs.saveModal.setSaveResult(result);
     },
     loadRecipe(recipe) {
       this.recipe = recipe;
