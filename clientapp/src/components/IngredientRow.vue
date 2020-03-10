@@ -7,6 +7,7 @@
         v-loading="searchState == SearchStates.InstantSearching"
         :label="$t('name')"
         :options="ingredientOptions"
+        :value="ingredient.name"
         @filter="onFilter"
         @change="nutrientsSearch"
       ></cv-combo-box>
@@ -18,7 +19,7 @@
       <cv-text-input v-model="computedUnit" :placeholder="$t('measurementUnit')" />
     </cv-structured-list-data>
     <cv-structured-list-data>
-      <cv-number-input v-model="ingredient.caloriesPerUnit" min="0" />
+      <cv-number-input v-model="computedCaloriesPerUnit" min="0" />
     </cv-structured-list-data>
     <cv-structured-list-data>{{caloriesPerMeal}}</cv-structured-list-data>
     <cv-structured-list-data>{{totalCalories}}</cv-structured-list-data>
@@ -56,8 +57,8 @@ export default {
       SearchStates: SearchState,
       searchState: SearchState.NotSearching,
       ingredientOptions: [],
-      previousInstantQuery: '',
-      previousNutritionQuery: '',
+      previousInstantQuery: "",
+      previousNutritionQuery: ""
     };
   },
   components: {
@@ -70,6 +71,18 @@ export default {
       },
       set(value) {
         this.ingredient.unit = value;
+      }
+    },
+    computedCaloriesPerUnit: {
+      get() {
+        return this.ingredient.caloriesPerUnit;
+      },
+      set(value) {
+        if (Number.isNaN(Number.parseFloat(value))) {
+          this.ingredient.caloriesPerUnit = 0;
+        } else {
+          this.ingredient.caloriesPerUnit = value;
+        }
       }
     },
     caloriesPerMeal: function() {
@@ -90,16 +103,19 @@ export default {
   },
   watch: {
     computedUnit(newValue, oldValue) {
-        this.ingredient.unit = newValue;
-        if (oldValue == '') {
-            return;
-        }
-        this.debounceNutrientSearch();
+      this.ingredient.unit = newValue;
+      if (oldValue == "") {
+        return;
+      }
+      this.debounceNutrientSearch();
     }
   },
   created() {
-      this.debounceNutrientSearch = _.debounce(this.nutrientsSearch, 500);
-      this.debounceInstantSearch = _.debounce(this.instantSearch, 500);
+    // Prevents a reduntant search if an ingredient is loaded in
+    this.previousInstantQuery = this.ingredient.name;
+
+    this.debounceNutrientSearch = _.debounce(this.nutrientsSearch, 500);
+    this.debounceInstantSearch = _.debounce(this.instantSearch, 500);
   },
   methods: {
     resetCombobox() {
@@ -115,7 +131,7 @@ export default {
       }
       let queryString = `${this.ingredient.name}`;
       if (this.previousInstantQuery == queryString) {
-          return;
+        return;
       }
 
       this.startInstantSearch(queryString);
@@ -145,10 +161,10 @@ export default {
       if (this.searchState != this.SearchStates.HasSearched) {
         return;
       }
-      
+
       let queryString = `${this.ingredient.name} ${this.ingredient.unitAmount} ${this.ingredient.unit}`.trim();
       if (this.previousNutritionQuery == queryString) {
-          return;
+        return;
       }
 
       this.startNutrientSearch(this.ingredient.name, queryString);
