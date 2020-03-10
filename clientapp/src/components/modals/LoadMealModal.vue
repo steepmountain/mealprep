@@ -12,7 +12,7 @@
             <cv-button @click="$emit('load-recipe', item)" size="small">{{item.name}}</cv-button>
             <cv-button @click="$emit('remove-recipe', item.index)" kind="danger" size="small">
               {{ $t('remove') }}
-              <Delete16 />
+              <Delete16 class="bx--btn__icon" />
             </cv-button>
           </div>
         </div>
