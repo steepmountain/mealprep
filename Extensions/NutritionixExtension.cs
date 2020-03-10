@@ -15,10 +15,10 @@ namespace MealprepFull.Extensions
         {
             return foods.Select(food => new IngredientRowViewModel(food));
         }
+
         public static IEnumerable<IngredientRowViewModel> AsIngredients(this IEnumerable<InstantSearchResponse.Common> foods)
         {
             return foods.Select(food => new IngredientRowViewModel(food));
         }
-
     }
 }

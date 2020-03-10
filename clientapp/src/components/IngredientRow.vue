@@ -9,7 +9,6 @@
         :options="ingredientOptions"
         @filter="onFilter"
         @change="nutrientsSearch"
-        ref="ingredientNameCombobox"
       ></cv-combo-box>
     </cv-structured-list-data>
     <cv-structured-list-data>
@@ -56,7 +55,9 @@ export default {
     return {
       SearchStates: SearchState,
       searchState: SearchState.NotSearching,
-      ingredientOptions: []
+      ingredientOptions: [],
+      previousInstantQuery: '',
+      previousNutritionQuery: '',
     };
   },
   components: {
@@ -88,8 +89,11 @@ export default {
     }
   },
   watch: {
-    computedUnit(newValue) {
+    computedUnit(newValue, oldValue) {
         this.ingredient.unit = newValue;
+        if (oldValue == '') {
+            return;
+        }
         this.debounceNutrientSearch();
     }
   },
@@ -109,8 +113,12 @@ export default {
       if (this.ingredient.name < 2) {
         return;
       }
-      this.startInstantSearch();
       let queryString = `${this.ingredient.name}`;
+      if (this.previousInstantQuery == queryString) {
+          return;
+      }
+
+      this.startInstantSearch(queryString);
       axios
         .get(`/api/food/lookup?query=${queryString}`)
         .then(response => {
@@ -126,20 +134,24 @@ export default {
         .catch(error => window.console.log(error.Response))
         .then(() => this.endInstantSearch());
     },
-    startInstantSearch() {
-      this.$refs.ingredientNameCombobox.doOpen(false);
+    startInstantSearch(queryString) {
       this.searchState = this.SearchStates.InstantSearching;
+      this.previousInstantQuery = queryString;
     },
     endInstantSearch() {
       this.searchState = this.SearchStates.HasSearched;
-      this.$refs.ingredientNameCombobox.doOpen(true);
     },
     nutrientsSearch() {
       if (this.searchState != this.SearchStates.HasSearched) {
         return;
       }
-      this.startNutrientSearch();
+      
       let queryString = `${this.ingredient.name} ${this.ingredient.unitAmount} ${this.ingredient.unit}`.trim();
+      if (this.previousNutritionQuery == queryString) {
+          return;
+      }
+
+      this.startNutrientSearch(this.ingredient.name, queryString);
       axios
         .get(`/api/food/nutrition?query=${queryString}`)
         .then(response => {
@@ -154,13 +166,13 @@ export default {
         .catch(error => window.console.log(error))
         .then(() => this.endNutrientSearch());
     },
-    startNutrientSearch() {
+    startNutrientSearch(name, queryString) {
       this.searchState = this.SearchStates.NutrientSearching;
-      this.$refs.ingredientNameCombobox.doOpen(false);
+      this.previousNutritionQuery = queryString;
+      this.previousInstantQuery = name;
     },
     endNutrientSearch() {
       this.searchState = this.SearchStates.HasSearched;
-      this.$refs.ingredientNameCombobox.doOpen(false);
     }
   }
 };
