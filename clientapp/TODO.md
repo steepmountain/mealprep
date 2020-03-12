@@ -6,3 +6,4 @@
   - https://github.com/damienbod/AspNetCoreMvcVueJs/tree/master/StsServerIdentity
   - https://identityserver4.readthedocs.io/en/latest/
 
+- https://github.com/SoftwareAteliers/asp-net-core-vue-starter
