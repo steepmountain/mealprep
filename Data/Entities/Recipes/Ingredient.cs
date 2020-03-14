@@ -1,15 +1,11 @@
-﻿using MealprepFull.Models.Nutritionix;
-using static MealprepFull.Models.Nutritionix.InstantSearchResponse;
-using static MealprepFull.Models.Nutritionix.NutrientResponse;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace MealprepFull.Data.Entities.Recipes
+namespace Mealprep.Data.Entities.Recipes
 {
     public class Ingredient
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public double Amount { get; set; }
-        public string MeasurementUnit { get; set; }
-        public double CaloriesPerMeasurementUnit { get; set; }
-    }
+    {}
 }

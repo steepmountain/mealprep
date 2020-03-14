@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MealprepFull.Data.Entities
+namespace Mealprep.Data.Entities
 {
     public class ApplicationUser : IdentityUser
     {

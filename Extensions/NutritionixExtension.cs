@@ -1,24 +1,23 @@
-﻿using MealprepFull.Data.Entities.Recipes;
+﻿using Mealprep.Models;
+using Mealprep.Models.Nutritionix;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MealprepFull.Models.Nutritionix;
-using MealprepFull.ViewModels;
 
-namespace MealprepFull.Extensions
+namespace Mealprep.Extensions
 {
     public static class NutritionixExtension
     {
-        public static IEnumerable<IngredientRowViewModel> AsIngredients(this IEnumerable<NutrientResponse.Food> foods)
+        public static IEnumerable<SimpleNutritionItem> AsIngredients(this IEnumerable<NutrientResponse.Food> foods)
         {
-            return foods.Select(food => new IngredientRowViewModel(food));
+            return foods.Select(food => new SimpleNutritionItem(food));
         }
 
-        public static IEnumerable<IngredientRowViewModel> AsIngredients(this IEnumerable<InstantSearchResponse.Common> foods)
+        public static IEnumerable<SimpleNutritionItem> AsIngredients(this IEnumerable<InstantSearchResponse.Common> foods)
         {
-            return foods.Select(food => new IngredientRowViewModel(food));
+            return foods.Select(food => new SimpleNutritionItem(food));
         }
     }
 }

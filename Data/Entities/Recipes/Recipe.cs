@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MealprepFull.Data.Entities.Recipes
+namespace Mealprep.Data.Entities.Recipes
 {
     public class Recipe
     {
