@@ -1,42 +1,37 @@
 <template>
-  <div id="app">
-    <div>
-      <cv-header aria-label="Carbon header" class="header">
-        <cv-header-name href="javascript:void(0)" prefix="💪">[Prep That Meal]</cv-header-name>
-        <div class="header-function-wrapper">
-          <LocaleSwitcher :locales="['en', 'no']" />
-          <cv-button @click="showSaveMealModal">{{ $t('save' )}}</cv-button>
-          <cv-button kind="secondary" @click="showLoadMealModal">{{ $t('open') }}</cv-button>
+    <div id="app">
+        <script async defer data-domain="mealprep.eatprayprogram.no" src="https://plausible.io/js/plausible.js"></script>
+        <div>
+            <cv-header aria-label="Carbon header" class="header">
+                <cv-header-name href="javascript:void(0)" prefix="💪">[Prep That Meal]</cv-header-name>
+                <div class="header-function-wrapper">
+                    <LocaleSwitcher :locales="['en', 'no']" />
+                    <cv-button @click="showSaveMealModal">{{ $t('save' )}}</cv-button>
+                    <cv-button kind="secondary" @click="showLoadMealModal">{{ $t('open') }}</cv-button>
+                </div>
+            </cv-header>
+
+            <h1 class="logo">💪</h1>
+            <h1>Prep That Meal</h1>
+            <IngredientList ref="ingredientList" v-bind:recipe="recipe" />
+
+            <p class="faded">{{ $t('poweredByNutritionix')}}</p>
+
+            <LoadMealModal v-bind:showModal="loadMealModalVisible"
+                           v-on:hide="hideLoadMealModal"
+                           v-on:load-recipe="loadRecipe" />
+            <SaveMealModal v-bind:showModal="saveMealModalVisible"
+                           v-on:hide="hideSaveMealModal"
+                           v-on:save="saveMeal"
+                           ref="saveModal" />
+
+            <div class="fixed-bottom" v-if="showFeatureToast">
+                <cv-toast-notification @close="closeFeatureToast"
+                                       :title="$t('nb')"
+                                       :sub-title="$t('featureToastMessage')"></cv-toast-notification>
+            </div>
         </div>
-      </cv-header>
-
-      <h1 class="logo">💪</h1>
-      <h1>Prep That Meal</h1>
-      <IngredientList ref="ingredientList" v-bind:recipe="recipe" />
-
-      <p class="faded">{{ $t('poweredByNutritionix')}}</p>
-
-      <LoadMealModal
-        v-bind:showModal="loadMealModalVisible"
-        v-on:hide="hideLoadMealModal"
-        v-on:load-recipe="loadRecipe"
-      />
-      <SaveMealModal
-        v-bind:showModal="saveMealModalVisible"
-        v-on:hide="hideSaveMealModal"
-        v-on:save="saveMeal"
-        ref="saveModal"
-      />
-
-      <div class="fixed-bottom" v-if="showFeatureToast">
-        <cv-toast-notification
-          @close="closeFeatureToast"
-          :title="$t('nb')"
-          :sub-title="$t('featureToastMessage')"
-        ></cv-toast-notification>
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
