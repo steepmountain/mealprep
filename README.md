@@ -1,24 +1,7 @@
-# meal
+# mealprep
+Vue.js webapp combining a recipe rolodex, a mealprepper and a calorie calculator into one.
 
-## Project setup
-```
-npm install
-```
+## Demo 
+[High resolution .mp4 demo](https://eatprayprogram.no/img/demo/demo.mp4)
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+![Demonstration of search feature](https://eatprayprogram.no/img/demo/demo.gif)

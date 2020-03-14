@@ -4,7 +4,7 @@
       <cv-header aria-label="Carbon header" class="header">
         <cv-header-name href="javascript:void(0)" prefix="💪">[Prep That Meal]</cv-header-name>
         <div class="header-function-wrapper">
-          <LocaleSwitcher @change-locale="forceRender" :locales="['en', 'no']" />
+          <LocaleSwitcher :locales="['en', 'no']" />
           <cv-button @click="showSaveMealModal">{{ $t('save' )}}</cv-button>
           <cv-button kind="secondary" @click="showLoadMealModal">{{ $t('open') }}</cv-button>
         </div>
@@ -13,6 +13,8 @@
       <h1 class="logo">💪</h1>
       <h1>Prep That Meal</h1>
       <IngredientList ref="ingredientList" v-bind:recipe="recipe" />
+
+      <p class="faded">{{ $t('poweredByNutritionix')}}</p>
 
       <LoadMealModal
         v-bind:showModal="loadMealModalVisible"
@@ -78,16 +80,17 @@ export default {
     },
     saveMeal(recipeName) {
       let result = this.$refs.ingredientList.saveRecipe(recipeName);
-      this.$refs.saveModal.setSaveState(result);
+      this.$refs.saveModal.setSaveResult(result);
     },
     loadRecipe(recipe) {
-      this.recipe = recipe;
+        // Wait for next tick to make sure dom is loaded correctly 
+      this.recipe.ingredients = [];
+      this.$nextTick(function() {
+          this.recipe = recipe;
+      })
     },
     closeFeatureToast() {
       this.showFeatureToast = false;
-    },
-    forceRender() {
-      this.$forceUpdate();
     }
   }
 };
@@ -131,5 +134,13 @@ h1 {
   bottom: 0;
   right: 0;
   text-align: left;
+}
+
+.faded {
+  color: #848181;
+  font-size: 0.8rem;
+  position: fixed;
+  bottom: 0.7rem;
+  left: 1rem;
 }
 </style>
