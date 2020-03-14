@@ -20,7 +20,8 @@
     "vue-i18n": "^8.15.4",
     "vue-inline-loading": "^1.1.3",
     "vue-property-decorator": "^8.2.2",
-    "vue-router": "^3.1.3"
+    "vue-router": "^3.1.3",
+    "minimist": ">=1.2.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.1.0",
